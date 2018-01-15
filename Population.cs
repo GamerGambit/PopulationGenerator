@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace PopulationGenerator
 {
@@ -72,10 +73,11 @@ namespace PopulationGenerator
 
         public static void Print()
         {
+            var sb = new StringBuilder();
+
             for (int genCount = 0; genCount < Generations.Count; ++genCount)
             {
-                Console.WriteLine("Generation {0}", genCount);
-                Console.WriteLine("========================");
+                sb.Append($"Generation {genCount}\n========================\n");
 
                 var prevGen = new List<Person>();
                 if (genCount > 0)
@@ -85,28 +87,30 @@ namespace PopulationGenerator
 
                 foreach (var person in Generations[genCount])
                 {
-                    Console.WriteLine("Name: {0}", person.Name);
+                    sb.Append($"Name: {person.Name}\n");
 
                     if (person.DNA.HasParents())
                     {
-                        Console.WriteLine("Parents: {0}, {1}", prevGen.Find(p => p.DNA.UniqueID == person.DNA.MotherUniqueID).Name, prevGen.Find(p => p.DNA.UniqueID == person.DNA.FatherUniqueID).Name);
+                        sb.AppendFormat("Parents: {0}, {1}\n", prevGen.Find(p => p.DNA.UniqueID == person.DNA.MotherUniqueID).Name, prevGen.Find(p => p.DNA.UniqueID == person.DNA.FatherUniqueID).Name);
                     }
                     else
                     {
-                        Console.WriteLine("Parents: None");
+                        sb.Append("Parents: None\n");
                     }
 
-                    Console.WriteLine("Gender: {0}", Enum.GetValues(typeof(Gender)).GetValue((int)person.DNA.Gender));
-                    Console.WriteLine("Hair Color: {0}", Enum.GetValues(typeof(HairColor)).GetValue((int)person.DNA.HairColor));
-                    Console.WriteLine("Eye Color: {0}", Enum.GetValues(typeof(EyeColor)).GetValue((int)person.DNA.EyeColor));
-                    Console.WriteLine("Skin Color: {0}", Enum.GetValues(typeof(SkinColor)).GetValue((int)person.DNA.SkinColor));
-                    Console.WriteLine("Height: {0}", Enum.GetValues(typeof(Height)).GetValue((int)person.DNA.Height));
-                    Console.WriteLine("Blood Type: {0}", person.DNA.BloodType);
-                    Console.WriteLine("\n");
+                    sb.AppendFormat("Gender: {0}\n", Enum.GetValues(typeof(Gender)).GetValue((int)person.DNA.Gender));
+                    sb.AppendFormat("Hair Color: {0}\n", Enum.GetValues(typeof(HairColor)).GetValue((int)person.DNA.HairColor));
+                    sb.AppendFormat("Eye Color: {0}\n", Enum.GetValues(typeof(EyeColor)).GetValue((int)person.DNA.EyeColor));
+                    sb.AppendFormat("Skin Color: {0}\n", Enum.GetValues(typeof(SkinColor)).GetValue((int)person.DNA.SkinColor));
+                    sb.AppendFormat("Height: {0}\n", Enum.GetValues(typeof(Height)).GetValue((int)person.DNA.Height));
+                    sb.AppendFormat("Blood Type: {0}\n", person.DNA.BloodType);
+                    sb.Append("\n");
                 }
 
-                Console.WriteLine("\n\n");
+                sb.Append("\n\n");
             }
+
+            Console.WriteLine(sb);
         }
     }
 }
