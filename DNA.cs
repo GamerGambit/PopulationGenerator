@@ -54,8 +54,6 @@ namespace PopulationGenerator
     {
         private static UInt16 uniqueID = 0;
         public UInt16 UniqueID { get; private set; } = uniqueID++;
-        public UInt16 MotherUniqueID { get; private set; } = 0;
-        public UInt16 FatherUniqueID { get; private set; } = 0;
 
         public Gender Gender { get; private set; }
         public HairColor HairColor { get; private set; }
@@ -81,19 +79,12 @@ namespace PopulationGenerator
 
         public DNA(DNA mother, DNA father)
         {
-            MotherUniqueID = mother.UniqueID;
-            FatherUniqueID = father.UniqueID;
             Gender = Utils.Pick<Gender>();
             HairColor = Utils.Pick(mother.HairColor, father.HairColor);
             EyeColor = Utils.Pick(mother.EyeColor, father.EyeColor);
             SkinColor = Utils.Pick(mother.SkinColor, father.SkinColor);
             Height = (Height)Utils.Rnd.Next(Math.Min((int)mother.Height, (int)father.Height), Math.Max((int)mother.Height, (int)father.Height) + 1);
             BloodType = BloodType.Derive(mother.BloodType, father.BloodType);
-        }
-
-        public bool HasParents()
-        {
-            return MotherUniqueID > 0 && FatherUniqueID > 0;
         }
     }
 }

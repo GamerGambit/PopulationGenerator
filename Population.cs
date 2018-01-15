@@ -64,8 +64,7 @@ namespace PopulationGenerator
                     var numChildren = Utils.Rnd.Next(0, 6); // WRONG! @todo replace with normal distribution (3, 1)
                     for (int childCount = 0; childCount < numChildren; ++childCount)
                     {
-                        var dna = new DNA(mother.DNA, father.DNA);
-                        curGen.Add(new Person(new PersonName(dna.Gender, mother.Name, father.Name), dna));
+                        curGen.Add(new Person(mother, father));
                     }
                 }
             }
@@ -89,9 +88,9 @@ namespace PopulationGenerator
                 {
                     sb.Append($"Name: {person.Name}\n");
 
-                    if (person.DNA.HasParents())
+                    if (person.HasParents())
                     {
-                        sb.AppendFormat("Parents: {0}, {1}\n", prevGen.Find(p => p.DNA.UniqueID == person.DNA.MotherUniqueID).Name, prevGen.Find(p => p.DNA.UniqueID == person.DNA.FatherUniqueID).Name);
+                        sb.Append($"Parents: {person.Mother.Name}, {person.Father.Name}\n");
                     }
                     else
                     {
