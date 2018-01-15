@@ -1,4 +1,4 @@
-﻿namespace InfiniteDetectiveAncestryTree
+﻿namespace PopulationGenerator
 {
     public class Person
     {

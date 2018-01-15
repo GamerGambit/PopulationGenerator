@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace InfiniteDetectiveAncestryTree
+namespace PopulationGenerator
 {
     public enum BloodGroup
     {

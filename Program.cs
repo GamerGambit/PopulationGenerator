@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace InfiniteDetectiveAncestryTree
+namespace PopulationGenerator
 {
     class Program
     {

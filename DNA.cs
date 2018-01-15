@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfiniteDetectiveAncestryTree
+namespace PopulationGenerator
 {
     public enum Gender
     {
