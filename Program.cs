@@ -73,6 +73,7 @@ namespace InfiniteDetectiveAncestryTree
                 }
             }
 
+            /*
             for (int genCount = 0; genCount < generations.Count; ++genCount)
             {
                 Console.WriteLine("Generation {0}", genCount);
@@ -108,11 +109,16 @@ namespace InfiniteDetectiveAncestryTree
 
                 Console.WriteLine("\n\n");
             }
+            */
         }
 
         static void Main(string[] args)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             generatePopulation(150);
+            sw.Stop();
+            Console.WriteLine("Generated in {0} ms", sw.ElapsedMilliseconds);
             Console.ReadLine();
         }
     }
