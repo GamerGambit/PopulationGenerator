@@ -12,6 +12,9 @@ namespace PopulationGenerator
             sw.Start();
             Population.Generate(150, 4);
             sw.Stop();
+
+            Population.Print();
+
             Console.WriteLine("Generated in {0} ms", sw.ElapsedMilliseconds);
             Console.ReadLine();
         }

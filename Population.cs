@@ -6,16 +6,16 @@ namespace PopulationGenerator
 {
     public static class Population
     {
-        public static List<List<Person>> Generations { get; private set; }
+        public static List<List<Person>> Generations { get; private set; } = new List<List<Person>>();
 
         public static void Generate(uint numRootPeople, uint numGenerations)
         {
-            var generations = new List<List<Person>>();
+            Generations = new List<List<Person>>();
 
             // generate root generation
             {
-                generations.Add(new List<Person>());
-                var rootGen = generations[0];
+                Generations.Add(new List<Person>());
+                var rootGen = Generations[0];
 
                 for (int rootCount = 0; rootCount < numRootPeople; ++rootCount)
                 {
@@ -26,10 +26,10 @@ namespace PopulationGenerator
 
             for (int genCount = 1; genCount < numGenerations; ++genCount)
             {
-                generations.Add(new List<Person>());
-                var curGen = generations[genCount];
+                Generations.Add(new List<Person>());
+                var curGen = Generations[genCount];
 
-                var prevGen = generations[genCount - 1];
+                var prevGen = Generations[genCount - 1];
                 var tappedDNAIDs = new List<UInt16>();
 
                 int prevGenPopulationBias = 0;
