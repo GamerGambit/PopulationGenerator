@@ -64,6 +64,11 @@ namespace PopulationGenerator
         public Height Height { get; private set; }
         public BloodType BloodType { get; private set; }
 
+        public static DNA Generate()
+        {
+            return new DNA(Utils.Pick<Gender>(), Utils.Pick<HairColor>(), Utils.Pick<EyeColor>(), Utils.Pick<SkinColor>(), Utils.Pick<Height>(), new BloodType(Utils.Pick<BloodGroup>(), Utils.Pick<BloodRHFactor>()));
+        }
+
         public DNA(Gender gender, HairColor hairColor, EyeColor eyeColor, SkinColor skinColor, Height height, BloodType bloodType)
         {
             Gender = gender;
