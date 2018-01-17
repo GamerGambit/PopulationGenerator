@@ -52,8 +52,8 @@ namespace PopulationGenerator
 
     public sealed class DNA
     {
-        private static UInt16 uniqueID = 0;
-        public UInt16 UniqueID { get; private set; } = uniqueID++;
+        private static uint uniqueID = 0;
+        public uint UniqueID { get; private set; } = uniqueID++;
 
         public Gender Gender { get; private set; }
         public HairColor HairColor { get; private set; }

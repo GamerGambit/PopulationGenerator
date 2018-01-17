@@ -31,7 +31,7 @@ namespace PopulationGenerator
                 var curGen = Generations[genCount];
 
                 var prevGen = Generations[genCount - 1];
-                var tappedDNAIDs = new List<UInt16>();
+                var tappedDNAIDs = new List<uint>();
 
                 int prevGenPopulationBias = 0;
                 prevGen.ForEach(p => prevGenPopulationBias += p.DNA.Gender == Gender.Female ? 1 : -1);
