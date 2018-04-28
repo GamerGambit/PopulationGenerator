@@ -1038,7 +1038,7 @@ namespace PopulationGenerator
             string last = null;
 
             // 80% chance of taking the father's last name
-            if (Utils.Rnd.Next(100) <= 80)
+            if (Utils.Rnd.Next(100) <= 85)
             {
                 origin = father.Origin;
                 last = father.Last;
@@ -1051,7 +1051,15 @@ namespace PopulationGenerator
             else
             {
                 origin = Utils.Pick(mother.Origin, father.Origin);
-                last = father.Last + '-' + mother.Last;
+
+                if (mother.Last.Contains("-") || father.Last.Contains("-"))
+                {
+                    last = Utils.Pick(mother.Last, father.Last);
+                }
+                else
+                {
+                    last = father.Last + '-' + mother.Last;
+                }
             }
 
             var first = GetGenderName(gender, origin);
@@ -1094,9 +1102,9 @@ namespace PopulationGenerator
         public override string ToString()
         {
             if (Second == null)
-                return First + ' ' + Last + " (" + Origin + ')';
+                return First + ' ' + Last; // + " (" + Origin + ')';
 
-            return First + ' ' + Second + ' ' + Last + " (" + Origin + ')';
+            return First + ' ' + Second + ' ' + Last; // + " (" + Origin + ')';
         }
     }
 }

@@ -7,106 +7,85 @@ namespace PopulationGenerator
 {
     public static class Population
     {
-        public static List<List<Person>> Generations { get; private set; } = new List<List<Person>>();
+        public const byte AvgGenerationAge = 24;
+        public const byte MinReproductionAge = 18;
+        public const byte MaxFemaleReproductionAge = 50; // menopause
 
-        public static void Generate(uint numRootPeople, uint numGenerations)
+        public static List<Person> People { get; internal set; } = new List<Person>();
+
+        public static void Generate(int numRootPeople, uint numYears)
         {
-            Generations = new List<List<Person>>();
-
-            // generate root generation
+            People = new List<Person>(numRootPeople);
+            for (var count = 0; count < numRootPeople; ++count)
             {
-                Generations.Add(new List<Person>());
-                var rootGen = Generations[0];
-
-                for (int rootCount = 0; rootCount < numRootPeople; ++rootCount)
-                {
-                    var dna = DNA.Generate();
-                    rootGen.Add(new Person(PersonName.Create(dna.Gender), dna));
-                }
+                People.Add(new Person());
             }
 
-            for (int genCount = 1; genCount < numGenerations; ++genCount)
+            var deadPeople = new List<Person>();
+            var children = new List<Person>();
+
+            for (var year = 0; year < numYears; ++year)
             {
-                Generations.Add(new List<Person>());
-                var curGen = Generations[genCount];
-
-                var prevGen = Generations[genCount - 1];
-                var tappedDNAIDs = new List<uint>();
-
-                int prevGenPopulationBias = 0;
-                prevGen.ForEach(p => prevGenPopulationBias += p.DNA.Gender == Gender.Female ? 1 : -1);
-                var maxCouples = (prevGen.Count - Math.Abs(prevGenPopulationBias)) / 2;
-                for (int coupleCount = 0; coupleCount < maxCouples; ++coupleCount)
+                foreach (var person in People)
                 {
-                    Person mother = null;
-                    Person father = null;
+                    var child = person.SimulateYear(year);
 
-                    foreach (var person in prevGen)
+                    if (child != null)
                     {
-                        if (person.DNA.Gender == Gender.Female && mother == null && tappedDNAIDs.Contains(person.DNA.UniqueID) == false)
-                        {
-                            mother = person;
-                            tappedDNAIDs.Add(person.DNA.UniqueID);
-                        }
-
-                        if (person.DNA.Gender == Gender.Male && father == null && tappedDNAIDs.Contains(person.DNA.UniqueID) == false)
-                        {
-                            father = person;
-                            tappedDNAIDs.Add(person.DNA.UniqueID);
-                        }
-
-                        if (father != null && mother != null)
-                            break;
+                        children.Add(child);
                     }
 
-                    Debug.Assert(mother != null && father != null);
-
-                    var numChildren = Utils.Rnd.Next(0, 6); // WRONG! @todo replace with normal distribution (3, 1)
-                    for (int childCount = 0; childCount < numChildren; ++childCount)
+                    if (person.IsDead)
                     {
-                        curGen.Add(new Person(mother, father));
+                        deadPeople.Add(person);
                     }
                 }
+
+                foreach (var deadPerson in deadPeople)
+                {
+                    People.Remove(deadPerson);
+                }
+
+                deadPeople.Clear();
+
+                foreach (var child in children)
+                {
+                    People.Add(child);
+                }
+
+                children.Clear();
             }
         }
 
         public static void Print()
         {
             var sb = new StringBuilder();
-
-            for (int genCount = 0; genCount < Generations.Count; ++genCount)
+            foreach (var person in People)
             {
-                sb.Append($"Generation {genCount}\n========================\n");
+                sb.Append($"Name: {person.Name, 32} | Age: {person.Age}\n");
+                /*
+                sb.Append($"Name: {person.Name}\n");
 
-                var prevGen = new List<Person>();
-                if (genCount > 0)
+                if (person.HasParents())
                 {
-                    prevGen = Generations[genCount - 1];
+                    sb.Append($"Parents: {person.Mother.Name}, {person.Father.Name}\n");
+                }
+                else
+                {
+                    sb.Append("Parents: None\n");
                 }
 
-                foreach (var person in Generations[genCount])
-                {
-                    sb.Append($"Name: {person.Name}\n");
-
-                    if (person.HasParents())
-                    {
-                        sb.Append($"Parents: {person.Mother.Name}, {person.Father.Name}\n");
-                    }
-                    else
-                    {
-                        sb.Append("Parents: None\n");
-                    }
-
-                    sb.AppendFormat("Gender: {0}\n", Enum.GetValues(typeof(Gender)).GetValue((int)person.DNA.Gender));
-                    sb.AppendFormat("Hair Color: {0}\n", Enum.GetValues(typeof(HairColor)).GetValue((int)person.DNA.HairColor));
-                    sb.AppendFormat("Eye Color: {0}\n", Enum.GetValues(typeof(EyeColor)).GetValue((int)person.DNA.EyeColor));
-                    sb.AppendFormat("Skin Color: {0}\n", Enum.GetValues(typeof(SkinColor)).GetValue((int)person.DNA.SkinColor));
-                    sb.AppendFormat("Height: {0}\n", Enum.GetValues(typeof(Height)).GetValue((int)person.DNA.Height));
-                    sb.AppendFormat("Blood Type: {0}\n", person.DNA.BloodType);
-                    sb.Append("\n");
-                }
+                sb.Append($"Age: {person.Age}\n");
+                sb.Append($"Gender: {person.DNA.Gender}\n");
+                sb.Append($"Hair Color: {person.DNA.HairColor}\n");
+                sb.Append($"Eye Color: {person.DNA.EyeColor}\n");
+                sb.Append($"Skin Color: {person.DNA.SkinColor}\n");
+                sb.Append($"Height: {person.DNA.Height}\n");
+                sb.Append($"Blood Type: {person.DNA.BloodType}\n");
+                sb.Append("\n");
 
                 sb.Append("\n\n");
+                */
             }
 
             Console.WriteLine(sb);
