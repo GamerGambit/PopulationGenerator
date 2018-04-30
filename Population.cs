@@ -5,65 +5,65 @@ using System.Text;
 
 namespace PopulationGenerator
 {
-    public static class Population
-    {
-        public const byte AvgGenerationAge = 24;
-        public const byte MinReproductionAge = 18;
-        public const byte MaxFemaleReproductionAge = 50; // menopause
+	public static class Population
+	{
+		public const byte AvgGenerationAge = 24;
+		public const byte MinReproductionAge = 18;
+		public const byte MaxFemaleReproductionAge = 50; // menopause
 
-        public static List<Person> People { get; internal set; } = new List<Person>();
+		public static List<Person> People { get; internal set; } = new List<Person>();
 
-        public static void Generate(int numRootPeople, uint numYears)
-        {
-            People = new List<Person>(numRootPeople);
-            for (var count = 0; count < numRootPeople; ++count)
-            {
-                People.Add(new Person());
-            }
+		public static void Generate(int numRootPeople, uint numYears)
+		{
+			People = new List<Person>(numRootPeople);
+			for (var count = 0; count < numRootPeople; ++count)
+			{
+				People.Add(new Person());
+			}
 
-            var deadPeople = new List<Person>();
-            var children = new List<Person>();
+			var deadPeople = new List<Person>();
+			var children = new List<Person>();
 
-            for (var year = 0; year < numYears; ++year)
-            {
-                foreach (var person in People)
-                {
-                    var child = person.SimulateYear(year);
+			for (var year = 0; year < numYears; ++year)
+			{
+				foreach (var person in People)
+				{
+					var child = person.SimulateYear(year);
 
-                    if (child != null)
-                    {
-                        children.Add(child);
-                    }
+					if (child != null)
+					{
+						children.Add(child);
+					}
 
-                    if (person.IsDead)
-                    {
-                        deadPeople.Add(person);
-                    }
-                }
+					if (person.IsDead)
+					{
+						deadPeople.Add(person);
+					}
+				}
 
-                foreach (var deadPerson in deadPeople)
-                {
-                    People.Remove(deadPerson);
-                }
+				foreach (var deadPerson in deadPeople)
+				{
+					People.Remove(deadPerson);
+				}
 
-                deadPeople.Clear();
+				deadPeople.Clear();
 
-                foreach (var child in children)
-                {
-                    People.Add(child);
-                }
+				foreach (var child in children)
+				{
+					People.Add(child);
+				}
 
-                children.Clear();
-            }
-        }
+				children.Clear();
+			}
+		}
 
-        public static void Print()
-        {
-            var sb = new StringBuilder();
-            foreach (var person in People)
-            {
-                sb.Append($"Name: {person.Name, 32} | Age: {person.Age}\n");
-                /*
+		public static void Print()
+		{
+			var sb = new StringBuilder();
+			foreach (var person in People)
+			{
+				sb.Append($"Name: {person.Name,32} | Age: {person.Age}\n");
+				/*
                 sb.Append($"Name: {person.Name}\n");
 
                 if (person.HasParents())
@@ -86,9 +86,9 @@ namespace PopulationGenerator
 
                 sb.Append("\n\n");
                 */
-            }
+			}
 
-            Console.WriteLine(sb);
-        }
-    }
+			Console.WriteLine(sb);
+		}
+	}
 }
