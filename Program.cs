@@ -9,7 +9,7 @@ namespace PopulationGenerator
 		{
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
-			Population.Generate(1, 100);
+			Population.Generate(150, 100);
 			sw.Stop();
 
 			Population.Print();

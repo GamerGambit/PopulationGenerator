@@ -12,28 +12,23 @@ namespace PopulationGenerator
 		public const byte MaxFemaleReproductionAge = 50; // menopause
 
 		public static List<Person> People { get; internal set; } = new List<Person>();
+		internal static List<Person> BirthQueue = new List<Person>();
 
-		public static void Generate(int numRootPeople, uint numYears)
+		public static void Generate(uint numRootPeople, uint numYears)
 		{
-			People = new List<Person>(numRootPeople);
+			People = new List<Person>((int)(numRootPeople * numYears));
 			for (var count = 0; count < numRootPeople; ++count)
 			{
 				People.Add(new Person());
 			}
 
 			var deadPeople = new List<Person>();
-			var children = new List<Person>();
 
 			for (var year = 0; year < numYears; ++year)
 			{
 				foreach (var person in People)
 				{
-					var child = person.SimulateYear(year);
-
-					if (child != null)
-					{
-						children.Add(child);
-					}
+					person.SimulateYear(year);
 
 					if (person.IsDead)
 					{
@@ -48,12 +43,12 @@ namespace PopulationGenerator
 
 				deadPeople.Clear();
 
-				foreach (var child in children)
+				foreach (var child in BirthQueue)
 				{
 					People.Add(child);
 				}
 
-				children.Clear();
+				BirthQueue.Clear();
 			}
 		}
 

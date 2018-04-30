@@ -49,7 +49,7 @@ namespace PopulationGenerator
 			return true;
 		}
 
-		internal Person SimulateYear(int year)
+		internal void SimulateYear(int year)
 		{
 			++Age;
 
@@ -58,7 +58,7 @@ namespace PopulationGenerator
 			{
 				IsDead = true;
 				YearOfDeath = year;
-				return null;
+				return;
 			}
 
 			// Partner (50% chance)
@@ -91,10 +91,8 @@ namespace PopulationGenerator
 				var mother = (DNA.Gender == Gender.Female) ? this : Partner;
 				var father = (DNA.Gender == Gender.Male) ? this : Partner;
 
-				return new Person(year, mother, father);
+				Population.BirthQueue.Add(new Person(year, mother, father));
 			}
-
-			return null;
 		}
 
 		public Person()
