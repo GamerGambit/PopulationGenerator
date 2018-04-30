@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace PopulationGenerator
 {
@@ -15,6 +15,39 @@ namespace PopulationGenerator
 
 		public int YearOfBirth { get; private set; } = 0;
 		public int YearOfDeath { get; private set; } = 0;
+
+		public static bool FindSuitableMate(Person mateFor, out Person mate)
+		{
+			var candidates = new List<Person>();
+
+			foreach (var person in Population.People)
+			{
+				if (person == mateFor)
+					continue;
+
+				if (person.Age < Population.MinReproductionAge)
+					continue;
+
+				// TODO: add diversity
+				if (person.DNA.Gender == mateFor.DNA.Gender)
+					continue;
+
+				// TODO: infidelity?
+				if (person.Partner != null)
+					continue;
+
+				candidates.Add(person);
+			}
+
+			if (candidates.Count == 0)
+			{
+				mate = null;
+				return false;
+			}
+
+			mate = candidates.Pick();
+			return true;
+		}
 
 		internal Person SimulateYear(int year)
 		{
@@ -33,12 +66,10 @@ namespace PopulationGenerator
 			{
 				if (Partner == null && Utils.Rnd.Next(101) <= 50)
 				{
-					var foundPartner = Population.People.Find(p => p.DNA.Gender != DNA.Gender && p.Age >= Population.MinReproductionAge);
-
-					if (foundPartner != null)
+					if (FindSuitableMate(this, out var mate))
 					{
-						Partner = foundPartner;
-						foundPartner.Partner = this;
+						Partner = mate;
+						mate.Partner = this;
 					}
 				}
 				else if (Partner != null && Partner.IsDead == false && Utils.Rnd.Next(101) <= 5) // 5% chance of a breakup
@@ -49,7 +80,13 @@ namespace PopulationGenerator
 			}
 
 			// Reproduction (30% chance)
-			if (Partner != null && Partner.IsDead == false && Utils.Rnd.Next(101) <= 30 && ((DNA.Gender == Gender.Female && Age <= Population.MaxFemaleReproductionAge) || (DNA.Gender == Gender.Male && Partner.Age <= Population.MaxFemaleReproductionAge)))
+			if (
+				Partner != null && Partner.IsDead == false && Utils.Rnd.Next(101) <= 30 &&
+				(
+					(DNA.Gender == Gender.Female && Age <= Population.MaxFemaleReproductionAge) ||
+					(DNA.Gender == Gender.Male && Partner.Age <= Population.MaxFemaleReproductionAge)
+				)
+			)
 			{
 				var mother = (DNA.Gender == Gender.Female) ? this : Partner;
 				var father = (DNA.Gender == Gender.Male) ? this : Partner;

@@ -9,12 +9,12 @@ namespace PopulationGenerator
 		{
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
-			Population.Generate(150, 100);
+			Population.Generate(1, 100);
 			sw.Stop();
 
 			Population.Print();
 
-			Console.WriteLine("Generated in {0} ms", sw.ElapsedMilliseconds);
+			Console.WriteLine($"Generated {Population.People.Count} people (from 10 root people over 100 years) in {sw.ElapsedMilliseconds} ms");
 			Console.ReadLine();
 		}
 	}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace PopulationGenerator
 {
@@ -15,6 +16,11 @@ namespace PopulationGenerator
 		{
 			var values = Enum.GetValues(typeof(T));
 			return (T)values.GetValue(Rnd.Next(values.Length));
+		}
+
+		public static T Pick<T>(this List<T> list)
+		{
+			return list[Rnd.Next(list.Count)];
 		}
 
 		public static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
