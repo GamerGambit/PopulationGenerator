@@ -7,14 +7,16 @@ namespace PopulationGenerator
 	{
 		static void Main(string[] args)
 		{
+			var generateArgs = (150u, 100u);
+
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
-			Population.Generate(150, 100);
+			Population.Generate(generateArgs.Item1, generateArgs.Item2);
 			sw.Stop();
 
 			Population.Print();
 
-			Console.WriteLine($"Generated {Population.People.Count} people (from 10 root people over 100 years) in {sw.ElapsedMilliseconds} ms");
+			Console.WriteLine($"Generated {Population.People.Count} people (from {generateArgs.Item1} root people over {generateArgs.Item2} years) in {sw.ElapsedMilliseconds} ms");
 			Console.ReadLine();
 		}
 	}
