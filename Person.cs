@@ -16,6 +16,19 @@ namespace PopulationGenerator
 		public int YearOfBirth { get; private set; } = 0;
 		public int YearOfDeath { get; private set; } = 0;
 
+		public static uint GetRelatedLevel(Person person1, Person person2)
+		{
+			if (!person1.HasParents() || !person2.HasParents())
+				return 0;
+
+			uint count = 0;
+
+			if (person1.Mother == person2.Mother || person1.Father == person2.Father)
+				count = 1;
+
+			return count + GetRelatedLevel(person1.Mother, person2.Mother) + GetRelatedLevel(person1.Mother, person2.Father) + GetRelatedLevel(person1.Father, person2.Mother) + GetRelatedLevel(person1.Father, person2.Father);
+		}
+
 		public static bool FindSuitableMate(Person mateFor, out Person mate)
 		{
 			var candidates = new List<Person>();
@@ -34,6 +47,11 @@ namespace PopulationGenerator
 
 				// TODO: infidelity?
 				if (person.Partner != null)
+					continue;
+
+				// TODO: small chance of inbreeding?
+				// until GetRelatedLevel is improved and we are able to see in what way 2 people are related, its ruled out completely
+				if (GetRelatedLevel(mateFor, person) > 0)
 					continue;
 
 				candidates.Add(person);
